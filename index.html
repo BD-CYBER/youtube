@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার ইউটিউব ডাউনলোডার</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #2d2d2d; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 90%; max-width: 400px; }
+        h2 { color: #ff0000; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: none; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #ff0000; color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #cc0000; }
+        .loader { display: none; margin-top: 15px; color: #ffcc00; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>YouTube Downloader</h2>
+        <p>লিঙ্কটি নিচে পেস্ট করুন:</p>
+        <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+        <button onclick="downloadVideo()">ডাউনলোড লিঙ্ক তৈরি করুন</button>
+        <div id="loader" class="loader">প্রসেসিং হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
+        <div id="downloadArea" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        function downloadVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const loader = document.getElementById('loader');
+            const area = document.getElementById('downloadArea');
+
+            if (!url) {
+                alert("দয়া করে লিঙ্ক দিন!");
+                return;
+            }
+
+            loader.style.display = "block";
+            area.innerHTML = "";
+
+            // আমরা একটি ফ্রি API ব্যবহার করছি (উদাহরণস্বরূপ)
+            // নোট: থার্ড পার্টি এপিআই মাঝে মাঝে পরিবর্তন হতে পারে
+            const apiUrl = `https://api.vevioz.com/api/button/videos/${extractID(url)}`;
+            
+            // একটি আইফ্রেম বা বাটন তৈরি করা যা ডাউনলোডে সাহায্য করবে
+            area.innerHTML = `<iframe src="https://api.vevioz.com/api/button/videos/${extractID(url)}" width="100%" height="60px" scrolling="no" style="border:none;"></iframe>`;
+            
+            loader.style.display = "none";
+        }
+
+        function extractID(url) {
+            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length == 11) ? match[2] : null;
+        }
+    </script>
+
+</body>
+</html>
