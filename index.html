@@ -5,57 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ইউটিউব ভিডিও ডাউনলোডার</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .box { background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 90%; max-width: 450px; }
-        h2 { color: #ff0000; margin-bottom: 20px; font-size: 24px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #333; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #252525; color: white; }
-        button { background-color: #ff0000; color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #cc0000; }
-        #downloadArea { margin-top: 25px; }
-        .iframe-container { width: 100%; height: 150px; border: 1px solid #444; border-radius: 10px; overflow: hidden; background: #fff; }
+        body { font-family: sans-serif; background-color: #121212; color: white; text-align: center; padding: 50px 20px; }
+        .box { background: #1e1e1e; padding: 30px; border-radius: 15px; max-width: 400px; margin: auto; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        h2 { color: #ff0000; }
+        input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        button { background: #ff0000; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .info { margin-top: 20px; font-size: 13px; color: #aaa; }
     </style>
 </head>
 <body>
-
     <div class="box">
         <h2>YouTube Downloader</h2>
-        <p style="font-size: 14px; color: #bbb;">লিঙ্কটি নিচে পেস্ট করুন:</p>
+        <p>ভিডিওর লিঙ্কটি দিন:</p>
         <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
-        <button onclick="downloadVideo()">ডাউনলোড লিঙ্ক তৈরি করুন</button>
-        
-        <div id="downloadArea">
-            </div>
-        
-        <p style="font-size: 10px; color: #666; margin-top: 20px;">দ্রষ্টব্য: প্রসেসিং হতে কয়েক সেকেন্ড সময় নিতে পারে।</p>
+        <button onclick="downloadNow()">ডাউনলোড পেজ খুলুন</button>
+        <div class="info">
+            বাটনে ক্লিক করলে একটি নতুন ট্যাব খুলবে, সেখান থেকে ফরম্যাট (MP4/MP3) বেছে নিন।
+        </div>
     </div>
 
     <script>
-        function downloadVideo() {
-            const urlInput = document.getElementById('videoUrl').value;
-            const area = document.getElementById('downloadArea');
-            const videoId = extractID(urlInput);
-
-            if (!videoId) {
-                alert("দয়া করে একটি সঠিক ইউটিউব লিঙ্ক দিন!");
+        function downloadNow() {
+            const url = document.getElementById('videoUrl').value;
+            if (!url) {
+                alert("দয়া করে একটি লিঙ্ক দিন!");
                 return;
             }
-
-            // আপডেট করা API ব্যবহার করছি (Loader.to বা Vevioz এর অল্টারনেটিভ)
-            area.innerHTML = `
-                <div class="iframe-container">
-                    <iframe src="https://loader.to/api/button/?url=${urlInput}&f=720" 
-                            width="100%" height="100%" scrolling="no" style="border:none;"></iframe>
-                </div>
-                <p style="margin-top:10px; font-size:12px; color: #ffcc00;">নিচের বাটনে ক্লিক করে ফরম্যাট সিলেক্ট করুন</p>
-            `;
-        }
-
-        function extractID(url) {
-            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length == 11) ? match[2] : null;
+            // সরাসরি ডাউনলোডার পোর্টালে পাঠিয়ে দেওয়া হচ্ছে যাতে ব্লক না হয়
+            const finalUrl = `https://loader.to/api/card/?url=${encodeURIComponent(url)}`;
+            window.open(finalUrl, '_blank');
         }
     </script>
-
 </body>
 </html>
